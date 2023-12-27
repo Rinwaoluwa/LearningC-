@@ -14,8 +14,10 @@ void printarray(int arg[], int length);
 
 std::string get_string(std::string text);
 int compute_score(std::string data);
+void validate_password(std::string password);
+std::string replace(std::string);
 
-int main(void)
+int main(int argc, char *argv[])
 {
     int m = 2, p = 3, o = 4;
     duplicate(m, p, o);
@@ -217,16 +219,28 @@ int main(void)
     // }
 
 
-    const std::string player_1 = get_string("Player 1: Please input a letter: ");
-    const std::string player_2 = get_string("Player 2: Please input a letter: ");
-    const int score_1 =  compute_score(player_1);
-    const int score_2 =  compute_score(player_2);
+    // const std::string player_1 = get_string("Player 1: Please input a letter: ");
+    // const std::string player_2 = get_string("Player 2: Please input a letter: ");
+    // const int score_1 =  compute_score(player_1);
+    // const int score_2 =  compute_score(player_2);
 
-    std::cout << player_1 << " " << player_2 << std::endl;
+    // if(score_1 > score_2) std::cout << "Player 1 wins!";
+    // if(score_2 > score_1) std::cout << "Player 2 wins!";
+    // if(score_1 == score_2) std::cout << "Tie!";
 
-    if(score_1 > score_2) std::cout << "Player 1 wins!";
-    if(score_2 > score_1) std::cout << "Player 2 wins!";
-    if(score_1 == score_2) std::cout << "Tie!";
+    // validate_password("hello");
+    // validate_password("h3ll(");
+    // validate_password(" h3LL0!");
+    if(argc < 1) {
+        std::cout << "please input a commandline argument" << std::endl;
+        return 1;
+    } else if(argc > 2) {
+        std::cout << "please use 1 argument" << std::endl;
+        return 1;
+    }
+
+    const std::string replace_words = replace(argv[1]);
+    std::cout << replace_words << std::endl;
 }
 
     std::string get_string(std::string text) {
@@ -236,6 +250,42 @@ int main(void)
         return data;
     }
 
+    std::string replace(std::string arg) {
+
+        for(char& ch : arg) {
+            switch(ch) {
+                case 'a':
+                    ch = '6';
+                    break;
+                case 'e':
+                    ch = '3';
+                    break;
+                case 'i':
+                    ch = '1';
+                    break;
+                case 'o':
+                    ch = '0';
+                    break;
+            }
+        }
+
+        return arg;
+    }
+
+    void validate_password(std::string password) {
+        bool is_uppercase, is_lowercase, is_number, is_symbol = false;
+
+        for(int index = 0; index < password.size(); index++) {
+            if(password[index] >= 'A' && password[index] <= 'Z') is_uppercase = true;
+            if(password[index] >= 'a' && password[index] <= 'z') is_lowercase = true;
+            if(password[index] >= 0 && password[index] <= 9) is_number = true;
+            if(password[index] >= '!' && password[index] <= '.') is_symbol = true;
+        }
+        std::string is_valid_password = is_uppercase && is_lowercase && is_number && is_symbol ? "Password Valid!" :
+        "Your password needs at least one uppercase letter, lowercase letter, number and symbol!";
+
+        std::cout << is_valid_password << std::endl;
+    }
 
     int compute_score(std::string word) {
         const int POINTS[] = {1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,1,4,4,8,4,10};
@@ -244,14 +294,13 @@ int main(void)
         for(int index = 0; index < word.size(); index++) {
             // Converts to Uppercase
             if (word[index] >= 'a' && word[index] <= 'z') {
-                score_points += POINTS[word[index] - 95];
+                score_points += POINTS[word[index] - 97];
             }
 
             if(word[index] >= 'A' && word[index] <= 'Z') {
                 score_points+= POINTS[word[index] - 65];
             }
         }
-        std::cout << score_points << std::endl;
         return score_points;
     }
 
